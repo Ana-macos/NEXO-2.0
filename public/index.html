@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEXO - Conecte-se através de eventos</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav">
+            <div class="nav-brand">
+                <h1>NEXO</h1>
+            </div>
+            <div class="nav-links">
+                <a href="#feed" class="nav-tab" data-tab="feed">Área de comunidade - feed</a>
+                <a href="#eventos" class="nav-tab" data-tab="eventos">Área de eventos</a>
+                <a href="#admin" class="nav-tab" data-tab="admin">Administração</a>
+                <button class="btn-secondary">Entrar</button>
+                <button class="btn-primary">Cadastrar</button>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Tab Content Container -->
+    <div class="tab-container">
+        <!-- Hero Section (Default) -->
+        <section class="hero tab-content active" id="home">
+            <div class="hero-content">
+                <h1>Conecte-se com pessoas que compartilham seus interesses</h1>
+                <p>Descubra eventos locais, conheça pessoas incríveis e construa conexões significativas na sua cidade.</p>
+                <div class="hero-actions">
+                    <button class="btn-primary btn-large">Encontrar Eventos</button>
+                    <button class="btn-secondary btn-large">Criar Grupo</button>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="hero-placeholder">🎯</div>
+            </div>
+        </section>
+
+        <!-- Área de comunidade - feed -->
+        <section class="tab-content" id="feed">
+            <div class="container">
+                <div class="feed-header">
+                    <h1>Feed da Comunidade</h1>
+                    <button class="btn-primary">Nova Publicação</button>
+                </div>
+                
+                <div class="feed-content">
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="user-avatar">👤</div>
+                            <div class="user-info">
+                                <h4>Maria Silva</h4>
+                                <p>Há 2 horas • Grupo de Tecnologia</p>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p>Acabei de participar do meetup de JavaScript! Foi incrível conhecer tantos desenvolvedores apaixonados. Já estou ansioso para o próximo evento! 🚀</p>
+                            <div class="post-image-placeholder">📸 Foto do evento</div>
+                        </div>
+                        <div class="post-actions">
+                            <button class="post-btn">👍 15 Curtidas</button>
+                            <button class="post-btn">💬 8 Comentários</button>
+                            <button class="post-btn">📤 Compartilhar</button>
+                        </div>
+                    </div>
+
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="user-avatar">👤</div>
+                            <div class="user-info">
+                                <h4>João Santos</h4>
+                                <p>Há 5 horas • Grupo de Design</p>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p>Compartilhando algumas dicas de UX que aprendi no workshop de hoje. Quem mais participou? Vamos trocar ideias!</p>
+                        </div>
+                        <div class="post-actions">
+                            <button class="post-btn">👍 23 Curtidas</button>
+                            <button class="post-btn">💬 12 Comentários</button>
+                            <button class="post-btn">📤 Compartilhar</button>
+                        </div>
+                    </div>
+
+                    <div class="post-card">
+                        <div class="post-header">
+                            <div class="user-avatar">👤</div>
+                            <div class="user-info">
+                                <h4>Ana Costa</h4>
+                                <p>Há 1 dia • Grupo de Empreendedorismo</p>
+                            </div>
+                        </div>
+                        <div class="post-content">
+                            <p>Lançando minha startup! Obrigada a todos do grupo pelo apoio e feedback. A jornada empreendedora fica mais fácil com uma comunidade incrível! 💪</p>
+                        </div>
+                        <div class="post-actions">
+                            <button class="post-btn">👍 45 Curtidas</button>
+                            <button class="post-btn">💬 20 Comentários</button>
+                            <button class="post-btn">📤 Compartilhar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Área de eventos -->
+        <section class="tab-content" id="eventos">
+            <div class="container">
+                <div class="events-header">
+                    <h1>Área de Eventos</h1>
+                    <div class="events-controls">
+                        <button class="btn-secondary">Filtrar</button>
+                        <button class="btn-primary">Criar Evento</button>
+                    </div>
+                </div>
+
+                <div class="events-filters">
+                    <button class="filter-btn active">Todos</button>
+                    <button class="filter-btn">Esta Semana</button>
+                    <button class="filter-btn">Este Mês</button>
+                    <button class="filter-btn">Online</button>
+                    <button class="filter-btn">Presencial</button>
+                </div>
+
+                <div class="events-grid">
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="day">15</span>
+                            <span class="month">DEZ</span>
+                        </div>
+                        <div class="event-info">
+                            <h3>Meetup de Tecnologia</h3>
+                            <p class="event-location">📍 São Paulo, SP</p>
+                            <p class="event-attendees">👥 45 participantes</p>
+                            <p class="event-description">Discussões sobre as últimas tendências em tecnologia e networking.</p>
+                            <div class="event-tags">
+                                <span class="tag">Tecnologia</span>
+                                <span class="tag">Networking</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="day">18</span>
+                            <span class="month">DEZ</span>
+                        </div>
+                        <div class="event-info">
+                            <h3>Workshop de Design</h3>
+                            <p class="event-location">📍 Rio de Janeiro, RJ</p>
+                            <p class="event-attendees">👥 32 participantes</p>
+                            <p class="event-description">Aprenda técnicas avançadas de design UX/UI com profissionais experientes.</p>
+                            <div class="event-tags">
+                                <span class="tag">Design</span>
+                                <span class="tag">UX/UI</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="day">22</span>
+                            <span class="month">DEZ</span>
+                        </div>
+                        <div class="event-info">
+                            <h3>Networking Empreendedor</h3>
+                            <p class="event-location">📍 Belo Horizonte, MG</p>
+                            <p class="event-attendees">👥 67 participantes</p>
+                            <p class="event-description">Conecte-se com outros empreendedores e compartilhe experiências.</p>
+                            <div class="event-tags">
+                                <span class="tag">Empreendedorismo</span>
+                                <span class="tag">Networking</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Administração -->
+        <section class="tab-content" id="admin">
+            <div class="container">
+                <div class="admin-header">
+                    <h1>Painel de Administração</h1>
+                </div>
+
+                <div class="admin-dashboard">
+                    <div class="admin-stats">
+                        <div class="stat-card">
+                            <div class="stat-icon">👥</div>
+                            <div class="stat-info">
+                                <h3>1,234</h3>
+                                <p>Usuários Ativos</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📅</div>
+                            <div class="stat-info">
+                                <h3>89</h3>
+                                <p>Eventos Ativos</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">🏢</div>
+                            <div class="stat-info">
+                                <h3>156</h3>
+                                <p>Grupos Criados</p>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon">📊</div>
+                            <div class="stat-info">
+                                <h3>92%</h3>
+                                <p>Taxa de Participação</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="admin-sections">
+                        <div class="admin-section">
+                            <h3>Gerenciar Usuários</h3>
+                            <div class="admin-actions">
+                                <button class="btn-secondary">Ver Todos os Usuários</button>
+                                <button class="btn-secondary">Usuários Pendentes</button>
+                                <button class="btn-secondary">Relatórios de Usuário</button>
+                            </div>
+                        </div>
+
+                        <div class="admin-section">
+                            <h3>Gerenciar Eventos</h3>
+                            <div class="admin-actions">
+                                <button class="btn-secondary">Eventos Pendentes</button>
+                                <button class="btn-secondary">Eventos Aprovados</button>
+                                <button class="btn-secondary">Relatórios de Evento</button>
+                            </div>
+                        </div>
+
+                        <div class="admin-section">
+                            <h3>Gerenciar Grupos</h3>
+                            <div class="admin-actions">
+                                <button class="btn-secondary">Todos os Grupos</button>
+                                <button class="btn-secondary">Grupos Ativos</button>
+                                <button class="btn-secondary">Moderação</button>
+                            </div>
+                        </div>
+
+                        <div class="admin-section">
+                            <h3>Configurações</h3>
+                            <div class="admin-actions">
+                                <button class="btn-secondary">Configurações Gerais</button>
+                                <button class="btn-secondary">Políticas</button>
+                                <button class="btn-primary">Backup do Sistema</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+
+
+    <!-- Categories Section -->
+    <section class="categories-section">
+        <div class="container">
+            <h2>Explore por categoria</h2>
+            <div class="categories-grid">
+                <div class="category-card">
+                    <div class="category-icon">💻</div>
+                    <h3>Tecnologia</h3>
+                    <p>125 grupos</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🎨</div>
+                    <h3>Design</h3>
+                    <p>89 grupos</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">💼</div>
+                    <h3>Negócios</h3>
+                    <p>156 grupos</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🏃</div>
+                    <h3>Esportes</h3>
+                    <p>203 grupos</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">🎵</div>
+                    <h3>Música</h3>
+                    <p>78 grupos</p>
+                </div>
+                <div class="category-card">
+                    <div class="category-icon">📚</div>
+                    <h3>Educação</h3>
+                    <p>94 grupos</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Pronto para começar?</h2>
+            <p>Junte-se a milhares de pessoas que já encontraram sua comunidade no NEXO</p>
+            <button class="btn-primary btn-large">Criar Conta Gratuita</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>NEXO</h3>
+                    <p>Conectando pessoas através de eventos e interesses compartilhados.</p>
+                </div>
+                <div class="footer-section">
+                    <h4>Plataforma</h4>
+                    <ul>
+                        <li><a href="#">Encontrar Eventos</a></li>
+                        <li><a href="#">Criar Grupo</a></li>
+                        <li><a href="#">Mobile App</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Suporte</h4>
+                    <ul>
+                        <li><a href="#">Central de Ajuda</a></li>
+                        <li><a href="#">Contato</a></li>
+                        <li><a href="#">Comunidade</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Empresa</h4>
+                    <ul>
+                        <li><a href="#">Sobre Nós</a></li>
+                        <li><a href="#">Carreiras</a></li>
+                        <li><a href="#">Imprensa</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 NEXO. Todos os direitos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 360" width="800" height="360" role="img" aria-labelledby="title desc">
+  <title id="title">Logo NEXO - símbolo entrelaçado com ligações em forma de estrela</title>
+  <desc id="desc">Símbolo composto por um laço entrelaçado em Azul Escuro #1E2A38 e Laranja #FF6B35, com pequenas estrelas conectando os pontos principais. Texto NEXO em azul escuro.</desc>
+
+  <!-- Background opcional (comente se quiser transparente) -->
+  <rect width="100%" height="100%" fill="#FFFFFF"/>
+
+  <!-- Definições de estilo -->
+  <defs>
+    <style>
+      .stroke-blue { stroke: #1E2A38; stroke-width: 28; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+      .stroke-orange { stroke: #FF6B35; stroke-width: 28; stroke-linecap: round; stroke-linejoin: round; fill: none; }
+      .logo-text { fill: #1E2A38; font-family: "Inter", "Arial", sans-serif; font-weight: 700; font-size: 86px; letter-spacing: 2px; }
+      .connector { stroke: #A0A4A8; stroke-width: 2; stroke-linecap: round; }
+      .star-blue { fill: #1E2A38; stroke: #FFFFFF; stroke-width: 2; }
+      .star-orange { fill: #FF6B35; stroke: #FFFFFF; stroke-width: 2; }
+    </style>
+
+    <!-- pequeno símbolo estrela (5 pontas) reutilizável -->
+    <symbol id="star" viewBox="-10 -10 20 20">
+      <polygon points="0,-8 2.4,-2.4 8,-2.4 3.2,1.0 5.2,6.8 0,3.6 -5.2,6.8 -3.2,1.0 -8,-2.4 -2.4,-2.4"/>
+    </symbol>
+  </defs>
+
+  <!-- Símbolo entrelaçado (duas faixas arredondadas) -->
+  <!-- Faixa azul (lado esquerdo / parte inferior do entrelaçado) -->
+  <path class="stroke-blue"
+        d="M220 100
+           C180 60, 120 60, 100 100
+           C80 140, 86 200, 120 230
+           C158 263, 220 260, 260 230
+           C300 200, 300 160, 260 140
+           L200 100"
+        />
+
+  <!-- Faixa laranja (lado direito / parte superior do entrelaçado) -->
+  <path class="stroke-orange"
+        d="M580 100
+           C540 60, 480 60, 460 100
+           C440 140, 446 200, 480 230
+           C518 263, 580 260, 620 230
+           C660 200, 660 160, 620 140
+           L560 100"
+        />
+
+  <!-- Pequeno entrelaçamento central (sugerindo que cruzam) -->
+  <path class="stroke-blue"
+        d="M260 140
+           C300 120, 360 120, 420 140"
+        opacity="0.95"/>
+  <path class="stroke-orange"
+        d="M260 180
+           C320 200, 380 200, 420 180"
+        opacity="0.95"/>
+
+  <!-- Conectores finos (linhas das estrelas para o símbolo) -->
+  <!-- Conector superior esquerdo -->
+  <line class="connector" x1="160" y1="90" x2="110" y2="60" />
+  <!-- Conector superior direito -->
+  <line class="connector" x1="640" y1="90" x2="690" y2="60" />
+  <!-- Conector central -->
+  <line class="connector" x1="440" y1="160" x2="500" y2="190" />
+  <!-- Conector inferior esquerdo -->
+  <line class="connector" x1="200" y1="230" x2="160" y2="270" />
+  <!-- Conector inferior direito -->
+  <line class="connector" x1="600" y1="230" x2="640" y2="270" />
+
+  <!-- Estrelas como nós de ligação -->
+  <!-- estrela laranja superior direita -->
+  <g transform="translate(700,40) scale(1.1)">
+    <use href="#star" class="star-orange"/>
+  </g>
+
+  <!-- estrela azul superior esquerda -->
+  <g transform="translate(100,40) scale(1.1)">
+    <use href="#star" class="star-blue"/>
+  </g>
+
+  <!-- estrela pequena azul central -->
+  <g transform="translate(500,200) scale(0.9)">
+    <use href="#star" class="star-blue"/>
+  </g>
+
+  <!-- estrela laranja inferior esquerda -->
+  <g transform="translate(150,280) scale(0.9)">
+    <use href="#star" class="star-orange"/>
+  </g>
+
+  <!-- estrela laranja inferior direita -->
+  <g transform="translate(650,280) scale(0.9)">
+    <use href="#star" class="star-orange"/>
+  </g>
+
+  <!-- Texto da marca -->
+  <text class="logo-text" x="400" y="325" text-anchor="middle">NEXO</text>
+</svg>
