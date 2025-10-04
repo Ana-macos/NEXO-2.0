@@ -1,483 +1,285 @@
-// Funcionalidades interativas do NEXO
-
 document.addEventListener('DOMContentLoaded', function() {
-    // Sistema de abas
-    const navTabs = document.querySelectorAll('.nav-tab');
-    const tabContents = document.querySelectorAll('.tab-content');
-    
-    // Mostrar aba inicial (home)
-    showTab('home');
-    
-    navTabs.forEach(tab => {
-        tab.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetTab = this.getAttribute('data-tab');
-            showTab(targetTab);
+    // Carregar eventos em tempo real
+    async function loadRealTimeEvents() {
+        try {
+            const response = await fetch('http://localhost:8080/api/events/tech-events');
+            const data = await response.json();
             
-            // Atualizar aba ativa
-            navTabs.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-        });
-    });
-    
-    function showTab(tabId) {
-        tabContents.forEach(content => {
-            content.classList.remove('active');
-        });
-        
-        const targetContent = document.getElementById(tabId);
-        if (targetContent) {
-            targetContent.classList.add('active');
+            if (data.success) {
+                updateStats(data.totalEvents, Object.keys(data.eventsByCountry).length);
+                renderEvents(data.eventsByCountry);
+            }
+        } catch (error) {
+            console.log('Usando eventos estáticos');
         }
     }
     
-    // Animação suave para links de navegação (mantido para compatibilidade)
-    const navLinks = document.querySelectorAll('.nav-links a[href^="#"]:not(.nav-tab)');
-    navLinks.forEach(link => {
-        link.addEventListener('click', function(e) {
-            e.preventDefault();
-            const targetId = this.getAttribute('href');
-            const targetSection = document.querySelector(targetId);
-            if (targetSection) {
-                targetSection.scrollIntoView({
-                    behavior: 'smooth',
-                    block: 'start'
-                });
-            }
+    // Atualizar estatísticas
+    function updateStats(totalEvents, totalCountries) {
+        document.querySelector('[data-target="2847"]').setAttribute('data-target', totalEvents);
+        document.querySelector('[data-target="45"]').setAttribute('data-target', totalCountries);
+    }
+    
+    // Renderizar eventos por país
+    function renderEvents(eventsByCountry) {
+        const eventsSection = document.querySelector('.events-section .container');
+        const title = eventsSection.querySelector('h3');
+        
+        // Limpar conteúdo atual
+        eventsSection.innerHTML = '';
+        eventsSection.appendChild(title);
+        
+        Object.entries(eventsByCountry).forEach(([country, events]) => {
+            const countrySection = document.createElement('div');
+            countrySection.className = 'country-section';
+            
+            const countryTitle = document.createElement('h4');
+            countryTitle.className = 'country-title';
+            countryTitle.textContent = country;
+            
+            const eventsGrid = document.createElement('div');
+            eventsGrid.className = 'events-grid';
+            
+            events.slice(0, 3).forEach(event => {
+                const eventDate = new Date(event.date);
+                const eventCard = `
+                    <div class="event-card" data-category="tecnologia">
+                        <div class="event-date">
+                            <span class="day">${eventDate.getDate()}</span>
+                            <span class="month">${eventDate.toLocaleDateString('pt-BR', {month: 'short'}).toUpperCase()}</span>
+                        </div>
+                        <div class="event-info">
+                            <h4>${event.title}</h4>
+                            <p class="event-group">${event.organizer}</p>
+                            <p class="event-location">${event.location}</p>
+                            <div class="event-meta">
+                                <span class="event-attendees">${event.attendees} participantes</span>
+                                <button class="join-btn">Participar</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                eventsGrid.innerHTML += eventCard;
+            });
+            
+            countrySection.appendChild(countryTitle);
+            countrySection.appendChild(eventsGrid);
+            eventsSection.appendChild(countrySection);
         });
-    });
-
-    // Funcionalidade de busca
-    const searchForm = document.querySelector('.search-form');
-    const searchInput = document.querySelector('.search-input');
-    const searchButton = searchForm.querySelector('.btn-primary');
-
-    searchButton.addEventListener('click', function(e) {
-        e.preventDefault();
-        const searchTerm = searchInput.value.trim();
-        if (searchTerm) {
-            // Simular busca
-            showSearchResults(searchTerm);
-        }
-    });
-
-    // Busca ao pressionar Enter
-    searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            searchButton.click();
-        }
-    });
-
-    // Interação com cards de eventos
-    const eventCards = document.querySelectorAll('.event-card');
-    eventCards.forEach(card => {
-        card.addEventListener('click', function() {
-            // Simular abertura de detalhes do evento
-            const eventTitle = this.querySelector('h3').textContent;
-            showEventDetails(eventTitle);
+        
+        // Reativar event listeners
+        attachEventListeners();
+    }
+    
+    // Animação de contadores
+    function animateCounters() {
+        const counters = document.querySelectorAll('.stat-number');
+        counters.forEach(counter => {
+            const target = parseInt(counter.getAttribute('data-target'));
+            const increment = target / 100;
+            let current = 0;
+            
+            const timer = setInterval(() => {
+                current += increment;
+                if (current >= target) {
+                    counter.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    counter.textContent = Math.floor(current).toLocaleString();
+                }
+            }, 20);
         });
-    });
+    }
+    
+    // Carregar eventos e iniciar animações
+    loadRealTimeEvents();
+    setTimeout(animateCounters, 500);
     
     // Filtros de eventos
     const filterBtns = document.querySelectorAll('.filter-btn');
+    const eventCards = document.querySelectorAll('.event-card');
+    
     filterBtns.forEach(btn => {
         btn.addEventListener('click', function() {
+            // Remove active de todos
             filterBtns.forEach(b => b.classList.remove('active'));
+            // Adiciona active no clicado
             this.classList.add('active');
             
-            const filterType = this.textContent;
-            filterEvents(filterType);
+            const filter = this.getAttribute('data-filter');
+            
+            // Animação sutil de filtro
+            eventCards.forEach(card => {
+                card.style.opacity = '0.5';
+                card.style.transform = 'scale(0.95)';
+                
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                }, 150);
+            });
         });
     });
     
-    // Botões de ação do feed
-    const postBtns = document.querySelectorAll('.post-btn');
-    postBtns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.stopPropagation();
-            const action = this.textContent;
-            handlePostAction(action);
-        });
-    });
+    // Busca com sugestões
+    const searchInput = document.querySelector('#searchInput');
+    const searchButton = document.querySelector('.search-bar button');
     
-    // Botões de administração
-    const adminBtns = document.querySelectorAll('.admin-actions button');
-    adminBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const action = this.textContent;
-            handleAdminAction(action);
-        });
-    });
-
-    // Interação com categorias
-    const categoryCards = document.querySelectorAll('.category-card');
-    categoryCards.forEach(card => {
-        card.addEventListener('click', function() {
-            const categoryName = this.querySelector('h3').textContent;
-            showCategoryEvents(categoryName);
-        });
-    });
-
-    // Botões de CTA
-    const ctaButtons = document.querySelectorAll('.btn-primary, .btn-secondary');
-    ctaButtons.forEach(button => {
-        if (button.textContent.includes('Cadastrar') || 
-            button.textContent.includes('Criar Conta') ||
-            button.textContent.includes('Entrar')) {
-            button.addEventListener('click', function(e) {
-                e.preventDefault();
-                showAuthModal(this.textContent);
+    searchInput.addEventListener('input', function() {
+        const value = this.value.toLowerCase();
+        if (value.length > 2) {
+            // Filtro sutil em tempo real
+            eventCards.forEach(card => {
+                const title = card.querySelector('h4').textContent.toLowerCase();
+                const group = card.querySelector('.event-group').textContent.toLowerCase();
+                
+                if (title.includes(value) || group.includes(value)) {
+                    card.style.opacity = '1';
+                    card.style.transform = 'scale(1)';
+                } else {
+                    card.style.opacity = '0.3';
+                    card.style.transform = 'scale(0.95)';
+                }
+            });
+        } else {
+            // Reset quando limpar busca
+            eventCards.forEach(card => {
+                card.style.opacity = '1';
+                card.style.transform = 'scale(1)';
             });
         }
     });
-
-    // Efeito parallax suave no hero
-    window.addEventListener('scroll', function() {
-        const scrolled = window.pageYOffset;
-        const heroImage = document.querySelector('.hero-placeholder');
-        if (heroImage) {
-            heroImage.style.transform = `translateY(${scrolled * 0.3}px)`;
+    
+    // Função para anexar event listeners
+    function attachEventListeners() {
+        // Botões de participar (apenas para eventos sem onclick)
+        const joinBtns = document.querySelectorAll('.join-btn:not([onclick])');
+        joinBtns.forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                joinEvent(this);
+            });
+        });
+    }
+    
+    // Dados de eventos por categoria
+    const eventsByCategory = {
+        tecnologia: [
+            { title: 'DevFest São Paulo 2024', group: 'Google Developers', location: 'São Paulo, SP', date: '15 DEZ', attendees: '1.2k', url: null },
+            { title: 'React Conf Brasil', group: 'React Community', location: 'Rio de Janeiro, RJ', date: '18 DEZ', attendees: '850', url: null },
+            { title: 'AI Summit San Francisco', group: 'AI Research Institute', location: 'San Francisco, CA', date: '22 DEZ', attendees: '3.5k', url: null },
+            { title: 'Blockchain Summit London', group: 'Blockchain Council', location: 'Londres, Inglaterra', date: '25 DEZ', attendees: '1.5k', url: null }
+        ],
+        design: [
+            { title: 'UX/UI Design Conference', group: 'Design Community', location: 'São Paulo, SP', date: '20 DEZ', attendees: '680', url: null },
+            { title: 'Creative Design Summit', group: 'Designers United', location: 'Rio de Janeiro, RJ', date: '23 DEZ', attendees: '420', url: null },
+            { title: 'Figma Design Week', group: 'Figma Community', location: 'Online', date: '28 DEZ', attendees: '2.1k', url: 'https://figma.com/events' }
+        ],
+        negocios: [
+            { title: 'Startup Weekend', group: 'Empreendedores SP', location: 'São Paulo, SP', date: '16 DEZ', attendees: '320', url: null },
+            { title: 'Business Innovation Summit', group: 'Innovation Hub', location: 'Belo Horizonte, MG', date: '21 DEZ', attendees: '580', url: null },
+            { title: 'Networking Empresarial', group: 'Business Network', location: 'Brasília, DF', date: '27 DEZ', attendees: '450', url: null }
+        ],
+        saude: [
+            { title: 'HealthTech Conference', group: 'Health Innovation', location: 'São Paulo, SP', date: '19 DEZ', attendees: '380', url: null },
+            { title: 'Telemedicina Summit', group: 'MedTech Brasil', location: 'Online', date: '24 DEZ', attendees: '620', url: 'https://zoom.us/webinar/register' },
+            { title: 'Wellness & Technology', group: 'WellTech Community', location: 'Curitiba, PR', date: '29 DEZ', attendees: '290', url: null }
+        ]
+    };
+    
+    // Clique nas categorias
+    const categoryCards = document.querySelectorAll('.category-card');
+    const modal = document.getElementById('categoryModal');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalEvents = document.getElementById('modalEvents');
+    const closeBtn = document.querySelector('.close');
+    
+    categoryCards.forEach(card => {
+        card.addEventListener('click', function() {
+            const category = this.getAttribute('data-category');
+            const categoryName = this.querySelector('h4').textContent;
+            
+            modalTitle.textContent = `Eventos de ${categoryName}`;
+            
+            const events = eventsByCategory[category] || [];
+            modalEvents.innerHTML = '';
+            
+            events.forEach(event => {
+                const eventCard = `
+                    <div class="event-card">
+                        <div class="event-date">
+                            <span class="day">${event.date.split(' ')[0]}</span>
+                            <span class="month">${event.date.split(' ')[1]}</span>
+                        </div>
+                        <div class="event-info">
+                            <h4>${event.title}</h4>
+                            <p class="event-group">${event.group}</p>
+                            <p class="event-location">${event.location}</p>
+                            <div class="event-meta">
+                                <span class="event-attendees">${event.attendees} participantes</span>
+                                <div class="event-actions">
+                                    ${event.location !== 'Online' ? `<button class="map-btn" onclick="openMap('${event.location}')">📍 Mapa</button>` : ''}
+                                    <button class="join-btn" onclick="${event.url ? `window.open('${event.url}', '_blank')` : 'joinEvent(this)'}">Participar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                modalEvents.innerHTML += eventCard;
+            });
+            
+            modal.style.display = 'block';
+            attachEventListeners();
+        });
+        
+        // Hover effects
+        card.addEventListener('mouseenter', function() {
+            this.style.background = 'rgba(255, 255, 255, 0.95)';
+        });
+        
+        card.addEventListener('mouseleave', function() {
+            this.style.background = 'rgba(255, 255, 255, 0.9)';
+        });
+    });
+    
+    // Fechar modal
+    closeBtn.addEventListener('click', function() {
+        modal.style.display = 'none';
+    });
+    
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            modal.style.display = 'none';
         }
     });
+    
+    // Atualizar eventos a cada 5 minutos
+    setInterval(loadRealTimeEvents, 300000);
 });
 
-// Função para mostrar resultados de busca
-function showSearchResults(searchTerm) {
-    // Criar modal de resultados
-    const modal = createModal('Resultados da Busca', `
-        <div class="search-results">
-            <h3>Buscando por: "${searchTerm}"</h3>
-            <div class="results-list">
-                <div class="result-item">
-                    <h4>Meetup de ${searchTerm}</h4>
-                    <p>📍 São Paulo, SP • 👥 25 participantes</p>
-                </div>
-                <div class="result-item">
-                    <h4>Workshop de ${searchTerm}</h4>
-                    <p>📍 Rio de Janeiro, RJ • 👥 18 participantes</p>
-                </div>
-                <div class="result-item">
-                    <h4>Networking ${searchTerm}</h4>
-                    <p>📍 Belo Horizonte, MG • 👥 32 participantes</p>
-                </div>
-            </div>
-        </div>
-    `);
-    showModal(modal);
-}
-
-// Função para mostrar detalhes do evento
-function showEventDetails(eventTitle) {
-    const modal = createModal(eventTitle, `
-        <div class="event-details">
-            <div class="event-header">
-                <div class="event-date-large">
-                    <span class="day">15</span>
-                    <span class="month">DEZ</span>
-                    <span class="year">2024</span>
-                </div>
-                <div class="event-time">
-                    <p><strong>19:00 - 22:00</strong></p>
-                    <p>📍 São Paulo, SP</p>
-                </div>
-            </div>
-            <div class="event-description-full">
-                <h4>Sobre o evento</h4>
-                <p>Este é um evento incrível onde você poderá conhecer pessoas com interesses similares, aprender coisas novas e expandir sua rede de contatos.</p>
-                <h4>O que esperar</h4>
-                <ul>
-                    <li>Networking com profissionais da área</li>
-                    <li>Apresentações inspiradoras</li>
-                    <li>Coffee break incluído</li>
-                </ul>
-            </div>
-            <div class="event-actions">
-                <button class="btn-primary">Participar do Evento</button>
-                <button class="btn-secondary">Compartilhar</button>
-            </div>
-        </div>
-    `);
-    showModal(modal);
-}
-
-// Função para mostrar eventos por categoria
-function showCategoryEvents(categoryName) {
-    const modal = createModal(`Eventos de ${categoryName}`, `
-        <div class="category-events">
-            <p>Explore todos os eventos relacionados a <strong>${categoryName}</strong></p>
-            <div class="events-list">
-                <div class="event-item">
-                    <h4>Meetup de ${categoryName} - Iniciantes</h4>
-                    <p>📅 20 Dez • 📍 São Paulo • 👥 15 vagas</p>
-                </div>
-                <div class="event-item">
-                    <h4>Workshop Avançado de ${categoryName}</h4>
-                    <p>📅 25 Dez • 📍 Rio de Janeiro • 👥 8 vagas</p>
-                </div>
-                <div class="event-item">
-                    <h4>Conferência ${categoryName} 2024</h4>
-                    <p>📅 30 Dez • 📍 Belo Horizonte • 👥 50 vagas</p>
-                </div>
-            </div>
-        </div>
-    `);
-    showModal(modal);
-}
-
-// Função para mostrar modal de autenticação
-function showAuthModal(action) {
-    const isLogin = action.includes('Entrar');
-    const title = isLogin ? 'Entrar no NEXO' : 'Criar Conta no NEXO';
-    const content = `
-        <div class="auth-form">
-            <form>
-                ${!isLogin ? '<input type="text" placeholder="Nome completo" class="form-input">' : ''}
-                <input type="email" placeholder="E-mail" class="form-input">
-                <input type="password" placeholder="Senha" class="form-input">
-                ${!isLogin ? '<input type="password" placeholder="Confirmar senha" class="form-input">' : ''}
-                <button type="submit" class="btn-primary btn-full">${action}</button>
-            </form>
-            <p class="auth-switch">
-                ${isLogin ? 'Não tem conta?' : 'Já tem conta?'} 
-                <a href="#" onclick="switchAuthMode()">${isLogin ? 'Cadastre-se' : 'Faça login'}</a>
-            </p>
-        </div>
-    `;
-    const modal = createModal(title, content);
-    showModal(modal);
-}
-
-// Função para criar modal
-function createModal(title, content) {
-    return `
-        <div class="modal-overlay" onclick="closeModal()">
-            <div class="modal-content" onclick="event.stopPropagation()">
-                <div class="modal-header">
-                    <h3>${title}</h3>
-                    <button class="modal-close" onclick="closeModal()">&times;</button>
-                </div>
-                <div class="modal-body">
-                    ${content}
-                </div>
-            </div>
-        </div>
-    `;
-}
-
-// Função para mostrar modal
-function showModal(modalHTML) {
-    // Remove modal existente se houver
-    const existingModal = document.querySelector('.modal-overlay');
-    if (existingModal) {
-        existingModal.remove();
-    }
-
-    // Adiciona novo modal
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-    document.body.style.overflow = 'hidden';
-
-    // Adiciona estilos do modal se não existirem
-    if (!document.querySelector('#modal-styles')) {
-        const modalStyles = document.createElement('style');
-        modalStyles.id = 'modal-styles';
-        modalStyles.textContent = `
-            .modal-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background-color: rgba(30, 42, 56, 0.8);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                z-index: 1000;
-            }
-            .modal-content {
-                background-color: #FFFFFF;
-                border-radius: 12px;
-                max-width: 500px;
-                width: 90%;
-                max-height: 80vh;
-                overflow-y: auto;
-            }
-            .modal-header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                padding: 24px;
-                border-bottom: 1px solid #F4F5F7;
-            }
-            .modal-header h3 {
-                color: #1E2A38;
-                margin: 0;
-            }
-            .modal-close {
-                background: none;
-                border: none;
-                font-size: 24px;
-                cursor: pointer;
-                color: #A0A4A8;
-            }
-            .modal-body {
-                padding: 24px;
-            }
-            .form-input {
-                width: 100%;
-                padding: 12px;
-                margin-bottom: 16px;
-                border: 1px solid #F4F5F7;
-                border-radius: 8px;
-                font-size: 16px;
-            }
-            .btn-full {
-                width: 100%;
-            }
-            .auth-switch {
-                text-align: center;
-                margin-top: 16px;
-                color: #A0A4A8;
-            }
-            .auth-switch a {
-                color: #FF6B35;
-                text-decoration: none;
-            }
-            .result-item, .event-item {
-                padding: 16px;
-                border: 1px solid #F4F5F7;
-                border-radius: 8px;
-                margin-bottom: 12px;
-            }
-            .event-header {
-                display: flex;
-                gap: 20px;
-                margin-bottom: 20px;
-            }
-            .event-date-large {
-                background-color: #FF6B35;
-                color: #FFFFFF;
-                padding: 16px;
-                border-radius: 8px;
-                text-align: center;
-                min-width: 80px;
-            }
-            .event-date-large .day {
-                display: block;
-                font-size: 24px;
-                font-weight: 800;
-            }
-            .event-date-large .month {
-                display: block;
-                font-size: 12px;
-            }
-            .event-date-large .year {
-                display: block;
-                font-size: 12px;
-            }
-            .event-actions {
-                display: flex;
-                gap: 12px;
-                margin-top: 20px;
-            }
-        `;
-        document.head.appendChild(modalStyles);
-    }
-}
-
-// Função para fechar modal
-function closeModal() {
-    const modal = document.querySelector('.modal-overlay');
-    if (modal) {
-        modal.remove();
-        document.body.style.overflow = '';
-    }
-}
-
-// Função para alternar modo de autenticação
-function switchAuthMode() {
-    closeModal();
-    // Determinar qual modal mostrar baseado no contexto
-    const isCurrentlyLogin = document.querySelector('.modal-content h3').textContent.includes('Entrar');
-    showAuthModal(isCurrentlyLogin ? 'Cadastrar' : 'Entrar');
-}
-
-// Função para filtrar eventos
-function filterEvents(filterType) {
-    console.log(`Filtrando eventos por: ${filterType}`);
-    // Aqui você implementaria a lógica de filtro real
-    showNotification(`Eventos filtrados por: ${filterType}`);
-}
-
-// Função para lidar com ações do post
-function handlePostAction(action) {
-    if (action.includes('Curtidas')) {
-        showNotification('Post curtido!');
-    } else if (action.includes('Comentários')) {
-        showNotification('Abrindo comentários...');
-    } else if (action.includes('Compartilhar')) {
-        showNotification('Post compartilhado!');
-    }
-}
-
-// Função para lidar com ações de administração
-function handleAdminAction(action) {
-    const modal = createModal(`Administração - ${action}`, `
-        <div class="admin-action-content">
-            <p>Você selecionou: <strong>${action}</strong></p>
-            <p>Esta funcionalidade estará disponível em breve.</p>
-            <div style="margin-top: 20px;">
-                <button class="btn-primary" onclick="closeModal()">Entendi</button>
-            </div>
-        </div>
-    `);
-    showModal(modal);
-}
-
-// Função para mostrar notificações
-function showNotification(message) {
-    // Criar elemento de notificação
-    const notification = document.createElement('div');
-    notification.className = 'notification';
-    notification.textContent = message;
+// Função para abrir mapas
+function openMap(location) {
+    const encodedLocation = encodeURIComponent(location);
+    const userAgent = navigator.userAgent;
     
-    // Adicionar estilos se não existirem
-    if (!document.querySelector('#notification-styles')) {
-        const notificationStyles = document.createElement('style');
-        notificationStyles.id = 'notification-styles';
-        notificationStyles.textContent = `
-            .notification {
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background-color: #FF6B35;
-                color: #FFFFFF;
-                padding: 16px 24px;
-                border-radius: 8px;
-                box-shadow: 0 4px 15px rgba(255, 107, 53, 0.3);
-                z-index: 1001;
-                animation: slideIn 0.3s ease;
-            }
-            
-            @keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-        `;
-        document.head.appendChild(notificationStyles);
+    // Detectar iOS
+    if (/iPad|iPhone|iPod/.test(userAgent)) {
+        window.open(`maps://maps.apple.com/?q=${encodedLocation}`, '_blank');
+    } else {
+        // Android/Desktop - Google Maps
+        window.open(`https://www.google.com/maps/search/?api=1&query=${encodedLocation}`, '_blank');
     }
+}
+
+// Função para participar de eventos presenciais
+function joinEvent(button) {
+    button.textContent = 'Participando!';
+    button.style.background = '#FF6B35';
+    button.style.color = '#FFFFFF';
     
-    // Adicionar ao DOM
-    document.body.appendChild(notification);
-    
-    // Remover após 3 segundos
     setTimeout(() => {
-        notification.remove();
-    }, 3000);
+        button.textContent = 'Participar';
+        button.style.background = 'rgba(255, 107, 53, 0.1)';
+        button.style.color = '#FF6B35';
+    }, 2000);
 }
